@@ -1,0 +1,37 @@
+RANDOM FOREST
+#############
+
+Entrenamiento:
+mae: 2.64
+mse: 0.08
+
+Test:
+correlacion: 0.46
+mae: 6.67
+mse: 0.19
+
+
+M5P
+###
+
+Entrenamiento:
+mae: 6.53
+mse: 0.19
+
+Test:
+correlacion: 0.33
+mae: 7.21
+mse: 0.21
+
+
+NN
+###
+
+Entrenamiento:
+mae: 6.81
+mse: 0.20
+
+Test:
+correlacion: 0.46
+mae: 6.75
+mse: 0.20

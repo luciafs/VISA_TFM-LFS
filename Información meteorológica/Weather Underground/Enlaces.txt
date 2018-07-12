@@ -1,0 +1,13 @@
+https://www.wunderground.com
+
+key: 0ad03edf984c5730
+Key Dani: f348092e8d359806
+
+Histórico:
+http://api.wunderground.com/api/0ad03edf984c5730/history_20010101/q/ES/Madrid.json
+
+1.5 días de predicción horaria:
+http://api.wunderground.com/api/0ad03edf984c5730/hourly/q/ES/Madrid.json
+
+10 días de predicción horaria (XXX):
+http://api.wunderground.com/api/0ad03edf984c5730/hourly10day/q/ES/Madrid.json

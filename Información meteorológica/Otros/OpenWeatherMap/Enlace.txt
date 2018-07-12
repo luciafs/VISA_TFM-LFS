@@ -1,0 +1,13 @@
+http://api.openweathermap.org/data/2.5/forecast?id=524901&APPID={APIKEY}
+
+Current data:
+http://api.openweathermap.org/data/2.5/weather?q=Madrid,es&APPID=51b34432719c09378bf908d20ea216e7
+
+Historical data: 5 años por 10$
+https://openweathermap.org/history
+https://openweathermap.org/weather-data
+
+Credentials:
+username: tiempo
+password: tiempo123
+key: 51b34432719c09378bf908d20ea216e7

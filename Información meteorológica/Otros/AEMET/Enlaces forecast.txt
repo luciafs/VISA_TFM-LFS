@@ -1,0 +1,5 @@
+Predicción horaria 2 días:
+http://www.aemet.es/xml/municipios_h/localidad_h_28079.xml
+
+Predicción diaria 7 días, en intervalos agregados de 12 horas:
+http://www.aemet.es/xml/municipios/localidad_28079.xml
