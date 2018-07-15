@@ -59,6 +59,16 @@ my_password <- "a"
 # hist_ica$dia = NULL
 # hist_ica$hora = NULL
 # hist_ica$mes = NULL
+# hist_ica$SO2 = tsclean(hist_ica$SO2, replace.missing = T)
+# hist_ica$SO2_ma = ma(hist_ica$SO2, order = 60*24)
+# hist_ica$CO = tsclean(hist_ica$CO, replace.missing = T)
+# hist_ica$CO_ma = ma(hist_ica$CO, order = 60*24)
+# hist_ica$NO2 = tsclean(hist_ica$NO2, replace.missing = T)
+# hist_ica$NO2_ma = ma(hist_ica$NO2, order = 60*24)
+# hist_ica$PM10 = tsclean(hist_ica$PM10, replace.missing = T)
+# hist_ica$PM10_ma = ma(hist_ica$PM10, order = 60*24)
+# hist_ica$O3 = tsclean(hist_ica$O3, replace.missing = T)
+# hist_ica$O3_ma = ma(hist_ica$O3, order = 60*24)
 # # Guardamos los resultados
 # write.csv(hist_ica,"../Calidad del aire/Preprocesado/Datos/datos_ica_visualizacion.csv",row.names=F)
 
@@ -72,30 +82,33 @@ hist_ica$timestamp = as.POSIXct(hist_ica$timestamp)
 # weather = weather[which(weather$timestamp>="2011-01-01 00:00:00"),]
 # # Hay horas con varias mediciones meteorologicas. Nos quedamos con la primera
 # weather = weather[-which(duplicated(weather$timestamp)),]
+# weather$temp = as.numeric(weather$temp)
+# weather$temp = tsclean(weather$temp, replace.missing = T)
+# weather$temp_ma = ma(weather$temp, order = 60*24)
+# weather$hum = as.numeric(weather$hum)
+# weather$hum = tsclean(weather$hum, replace.missing = T)
+# weather$hum_ma = ma(weather$hum, order = 60*24)
+# weather$presion= as.numeric(weather$presion)
+# weather$presion = tsclean(weather$presion, replace.missing = T)
+# weather$presion_ma = ma(weather$presion, order = 60*24)
+# weather$rain = as.numeric(weather$rain)
+# # weather$rain = tsclean(weather$rain, replace.missing = T)
+# weather$rain_ma = ma(weather$rain, order = 60*24)
 # write.csv(weather,"../Información meteorológica/Weather Underground/Preprocesado/tiempo_horario_visualizacion.csv",row.names=F)
 
 hist_tiempo = as.data.frame(fread("../Información meteorológica/Weather Underground/Preprocesado/tiempo_horario_visualizacion.csv",stringsAsFactors = F))
 hist_tiempo$timestamp = as.POSIXct(hist_tiempo$timestamp)
-hist_tiempo$temp = as.numeric(hist_tiempo$temp)
-hist_tiempo$temp = tsclean(hist_tiempo$temp, replace.missing = T)
-hist_tiempo$temp_ma = ma(hist_tiempo$temp, order = 60*24) 
-hist_tiempo$hum = as.numeric(hist_tiempo$hum)
-hist_tiempo$hum = tsclean(hist_tiempo$hum, replace.missing = T)
-hist_tiempo$hum_ma = ma(hist_tiempo$hum, order = 60*24) 
-hist_tiempo$presion= as.numeric(hist_tiempo$presion)
-hist_tiempo$presion = tsclean(hist_tiempo$presion, replace.missing = T)
-hist_tiempo$presion_ma = ma(hist_tiempo$presion, order = 60*24)
-hist_tiempo$rain = as.numeric(hist_tiempo$rain)
-# hist_tiempo$rain = tsclean(hist_tiempo$rain, replace.missing = T)
-hist_tiempo$rain_ma = ma(hist_tiempo$rain, order = 60*24) 
+ 
 
 forecast_anyo_28079024 = fread("../Calidad del aire/Análisis predictivo/Prophet/Forecast anual/Casa de campo_28079024/prophet_anual_28079024.csv",stringsAsFactors = F)
-forecast_anyo_28079008 = fread("../Calidad del aire/Análisis predictivo/Prophet/Forecast anual/Escuelas Aguirre_28079008/prophet_anual_28079008.csv",stringsAsFactors = F)
-forecast_anyo_28079018 = fread("../Calidad del aire/Análisis predictivo/Prophet/Forecast anual/Farolillo_28079018/prophet_anual_28079018.csv",stringsAsFactors = F)
-
 forecast_anyo_28079024$ds = as.POSIXct(forecast_anyo_28079024$ds)
+forecast_anyo_28079024 = forecast_anyo_28079024[which(forecast_anyo_28079024$ds >= "2018-01-01"),]
+forecast_anyo_28079008 = fread("../Calidad del aire/Análisis predictivo/Prophet/Forecast anual/Escuelas Aguirre_28079008/prophet_anual_28079008.csv",stringsAsFactors = F)
 forecast_anyo_28079008$ds = as.POSIXct(forecast_anyo_28079008$ds)
+forecast_anyo_28079008 = forecast_anyo_28079008[which(forecast_anyo_28079008$ds >= "2018-01-01"),]
+forecast_anyo_28079018 = fread("../Calidad del aire/Análisis predictivo/Prophet/Forecast anual/Farolillo_28079018/prophet_anual_28079018.csv",stringsAsFactors = F)
 forecast_anyo_28079018$ds = as.POSIXct(forecast_anyo_28079018$ds)
+forecast_anyo_28079018 = forecast_anyo_28079018[which(forecast_anyo_28079018$ds >= "2018-01-01"),]
 
 ######################### USER INTERFACE (UI) #########################
 
@@ -140,7 +153,9 @@ ui2 <- function(){
                             hr(),
                             radioButtons("hist_representacion", "Tipo de representación",
                                          c("Evolución" = "hist_med",
-                                           "Histograma" = "hist_hist"))
+                                           "Histograma" = "hist_hist")),
+                            hr(),
+                            h5("NOTA: Los gráficos pueden tardar algunos segundos en cargar debido al alto volumen de datos representado")
                           ),
                           mainPanel(
                             plotlyOutput("plot_ica"),
@@ -295,10 +310,19 @@ server = (function (input, output, session) {
                                   color = I('blue')) %>%
                         add_trace(y = ~ICA_ma60, mode = 'lines', name = "Media móvil mensual",
                                   color = I('red')) %>%
-                        layout(margin = list(t=65, pad=0),
+                        add_trace(x = c(hist_ica_plot$timestamp[1],hist_ica_plot$timestamp[nrow(hist_ica_plot)]),
+                                  y = 50, mode = 'lines', name = " ", color = I('green'),
+                                  line = list(dash = 'dash'), showlegend = FALSE) %>%
+                        add_trace(x = c(hist_ica_plot$timestamp[1],hist_ica_plot$timestamp[nrow(hist_ica_plot)]),
+                                  y = 100, mode = 'lines', name = " ", color = I('orange'),
+                                  line = list(dash = 'dash'), showlegend = FALSE) %>%
+                        add_trace(x = c(hist_ica_plot$timestamp[1],hist_ica_plot$timestamp[nrow(hist_ica_plot)]),
+                                  y = 150, mode = 'lines', name = " ", color = I('red'),
+                                  line = list(dash = 'dash'), showlegend = FALSE) %>%
+                        layout(margin = list(t=65, b=65, pad=0),
                                title = paste0("\nEvolución histórica del ICA desde 2011 (zona ",input$estacion_historico,")"),
                                xaxis = list(title = "", tickangle = 315),
-                               yaxis = list(title = "ICA", range = c(0,max(hist_ica_plot$clean_ICA)*1.2)),
+                               yaxis = list(title = "ICA", range = c(0,160)),
                                hovermode = "FALSE",
                                legend = list(x = 0.75, y = 1))
                     })
@@ -319,7 +343,7 @@ server = (function (input, output, session) {
                   observeEvent(input$años,{
                     if(!is.null(input$años)){
                       hist_ica_plot = hist_ica[which(hist_ica$cod_est==est_hist_code & hist_ica$anyo==input$años),
-                                               c("timestamp","anyo","clean_ICA","ICA_ma","ICA_ma60")]
+                                               c("timestamp","anyo","clean_ICA","Etiqueta","ICA_ma","ICA_ma60")]
                       
                       if(input$hist_representacion == "hist_med"){   # Curva media
                         output$plot_ica = renderPlotly({
@@ -338,14 +362,23 @@ server = (function (input, output, session) {
                         })
                       }
                       if(input$hist_representacion == "hist_hist"){   # Histograma
-                        hist_ica_hist = aggregate(hist_ica_plot$clean_ICA, by = list(hist_ica_plot$anyo), mean, na.rm=T)
-                        colnames(hist_ica_hist) = c("timestamp","clean_ICA")
+                        hist_ica_hist = data.frame(table(hist_ica_plot$Etiqueta))
+                        colnames(hist_ica_hist) = c("Etiquetas","Porcentaje")
+                        etiquetas = data.frame("Etiquetas"=c("Muy mala","Mala","Aceptable","Buena"))
+                        hist_ica_hist = merge(hist_ica_hist,etiquetas,by="Etiquetas",all.y=T)
+                        if(any(is.na(hist_ica_hist$Porcentaje))){
+                          hist_ica_hist$Porcentaje[which(is.na(hist_ica_hist$Porcentaje))]=0
+                        }
+                        hist_ica_hist$Etiquetas = factor(hist_ica_hist$Etiquetas,levels(hist_ica_hist$Etiquetas)[c(4,3,1,2)])
+                        hist_ica_hist$Porcentaje = (hist_ica_hist$Porcentaje/sum(hist_ica_hist$Porcentaje))*100
+                        
                         output$plot_ica = renderPlotly({
-                          plot_ly(hist_ica_hist, x = ~timestamp, y = ~clean_ICA, type = "bar") %>%
+                          plot_ly(hist_ica_hist, x = ~Etiquetas, y = ~Porcentaje, type = 'bar', 
+                                  text = round(hist_ica_hist$Porcentaje), textposition = 'auto') %>%
                             layout(margin = list(t=65, pad=0),
                                    title = paste0("\nEvolución histórica del ICA en el año ",input$años," (zona ",input$estacion_historico,")"),
-                                   xaxis = list(title = "", tickangle = 315),
-                                   yaxis = list(title = "ICA"),
+                                   xaxis = list(title = "Etiqueta ICA"),
+                                   yaxis = list(title = "Porcentaje de horas"),
                                    hovermode = "FALSE")
                         })
                       }
@@ -374,19 +407,24 @@ server = (function (input, output, session) {
                       }
                       
                       col_sel_contaminante = as.numeric(which(colnames(hist_ica)==input$sel_contaminante))
+                      col_sel_contaminante_ma = as.numeric(which(colnames(hist_ica)==paste0(input$sel_contaminante,"_ma")))
   
                       if(input$periodo_seleccionado == "todos"){   # Todos los años
-                        hist_cont_plot = hist_ica[which(hist_ica$cod_est==est_hist_code),c(1,11,col_sel_contaminante)]
-                        colnames(hist_cont_plot) = c("timestamp","anyo","contaminante")
+                        hist_cont_plot = hist_ica[which(hist_ica$cod_est==est_hist_code),c(1,11,col_sel_contaminante,col_sel_contaminante_ma)]
+                        colnames(hist_cont_plot) = c("timestamp","anyo","contaminante","contaminante_ma")
     
                         if(input$hist_representacion == "hist_med"){   # Curva media
                           output$plot_variable = renderPlotly({
-                            plot_ly(hist_cont_plot, x = ~timestamp, y = ~contaminante, type = "scatter", mode = "lines") %>%
+                            plot_ly(hist_cont_plot, x = ~timestamp, y = ~contaminante, type = "scatter", mode = "lines",
+                                    name = "Raw data", color = I('black')) %>%
+                              add_trace(y = ~contaminante_ma, mode = 'lines', name = "Media móvil mensual",
+                                        color = I('red')) %>%
                               layout(margin = list(t=65, pad=0),
                                      title = paste0("\nEvolución histórica del ",input$sel_contaminante," desde 2011 (zona ",input$estacion_historico,")"),
                                      xaxis = list(title = "", tickangle = 315),
                                      yaxis = list(title = paste(input$sel_contaminante,cont_units)),
-                                     hovermode = "FALSE")
+                                     hovermode = "FALSE",
+                                     legend = list(x = 0.75, y = 1))
                           })
                         }
                         if(input$hist_representacion == "hist_hist"){   # Histograma
@@ -405,17 +443,21 @@ server = (function (input, output, session) {
                         observeEvent(input$años,{
                           if(!is.null(input$años)){
                             hist_cont_plot = hist_ica[which(hist_ica$cod_est==est_hist_code & hist_ica$anyo==input$años),
-                                                      c("timestamp","anyo",input$sel_contaminante)]
-                            colnames(hist_cont_plot) = c("timestamp","anyo","contaminante")
+                                                      c(1,11,col_sel_contaminante,col_sel_contaminante_ma)]
+                            colnames(hist_cont_plot) = c("timestamp","anyo","contaminante","contaminante_ma")
     
                             if(input$hist_representacion == "hist_med"){   # Curva media
                               output$plot_variable = renderPlotly({
-                                plot_ly(hist_cont_plot, x = ~timestamp, y = ~contaminante, type = "scatter", mode = "lines") %>%
+                                plot_ly(hist_cont_plot, x = ~timestamp, y = ~contaminante, type = "scatter", mode = "lines",
+                                        name = "Raw data", color = I('black')) %>%
+                                  add_trace(y = ~contaminante_ma, mode = 'lines', name = "Media móvil mensual",
+                                            color = I('red')) %>%
                                   layout(margin = list(t=65, pad=0),
                                          title = paste0("\nEvolución histórica del ",input$sel_contaminante," en el año ",input$años," (zona ",input$estacion_historico,")"),
                                          xaxis = list(title = "", tickangle = 315),
                                          yaxis = list(title = paste(input$sel_contaminante,cont_units)),
-                                         hovermode = "FALSE")
+                                         hovermode = "FALSE",
+                                         legend = list(x = 0.75, y = 1))
                               })
                             }
                             if(input$hist_representacion == "hist_hist"){   # Histograma
@@ -571,28 +613,39 @@ server = (function (input, output, session) {
           if(input$forecast_año==TRUE){   # Plot prediccion anual
               if(est_pred_code == 28079024){
                 output$plot_forecast = renderPlotly({
-                  plot_ly(forecast_anyo_28079024, x = ~ds, y = ~yhat, type = "scatter", mode = "lines") %>%
-                    layout(margin = list(t=65, pad=0),
+                  plot_ly(forecast_anyo_28079024, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
+                          name = "Predicción") %>%
+                    add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
+                              line = list(dash = 'dash')) %>%
+                    layout(margin = list(t=65, b=65, pad=0),
                            title = "\nPredicción del ICA para el resto del año (zona Casa de Campo (S))",
                            xaxis = list(title = "", tickangle = 315),
                            yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079024$yhat)*1.5)),
-                           hovermode = "FALSE")
+                           hovermode = "FALSE",
+                           legend = list(x = 0.75, y = 1))
                 })
               }
               if(est_pred_code == 28079008){
                 output$plot_forecast = renderPlotly({
-                  plot_ly(forecast_anyo_28079008, x = ~ds, y = ~yhat, type = "scatter", mode = "lines") %>%
-                    layout(margin = list(t=65, pad=0),
+                  plot_ly(forecast_anyo_28079008, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
+                          name = "Predicción") %>%
+                    add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
+                              line = list(dash = 'dash')) %>%
+                    layout(margin = list(t=65, b=65, pad=0),
                            title = "\nPredicción del ICA para el resto del año (zona Escuelas Aguirre (UT))",
                            xaxis = list(title = "", tickangle = 315),
                            yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079008$yhat)*1.5)),
-                           hovermode = "FALSE")
+                           hovermode = "FALSE",
+                           legend = list(x = 0.75, y = 1))
                 })
               }
               if(est_pred_code == 28079018){
                 output$plot_forecast = renderPlotly({
-                  plot_ly(forecast_anyo_28079018, x = ~ds, y = ~yhat, type = "scatter", mode = "lines") %>%
-                    layout(margin = list(t=65, pad=0),
+                  plot_ly(forecast_anyo_28079018, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
+                          name = "Predicción") %>%
+                    add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
+                              line = list(dash = 'dash')) %>%
+                    layout(margin = list(t=65, b=65, pad=0),
                            title = "\nPredicción del ICA para el resto del año (zona Farolillo (UF))",
                            xaxis = list(title = "", tickangle = 315),
                            yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079018$yhat)*1.5)),
@@ -607,10 +660,19 @@ server = (function (input, output, session) {
                 
                 output$plot_forecast = renderPlotly({
                   plot_ly(forecast, x = ~timestamp, y = ~forecast, type = "scatter", mode = "lines") %>%
-                    layout(width = 800, height = 500, margin = list(t=65, pad=0),
+                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                              y = 50, mode = 'lines', name = " ", color = I('green'),
+                              line = list(dash = 'dash'), showlegend = FALSE) %>%
+                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                              y = 100, mode = 'lines', name = " ", color = I('orange'),
+                              line = list(dash = 'dash'), showlegend = FALSE) %>%
+                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                              y = 150, mode = 'lines', name = " ", color = I('red'),
+                              line = list(dash = 'dash'), showlegend = FALSE) %>%
+                    layout(width = 800, height = 500, margin = list(t=65, b=100, pad=0),
                            title = paste0("\nPredicción del ICA para las próximas 24 horas (zona ",input$estacion_prediccion,")"),
                            xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,max(forecast$forecast)*1.5)),
+                           yaxis = list(title = "ICA", range = c(0,160)),
                            hovermode = "FALSE")
                 })
               }
@@ -620,10 +682,19 @@ server = (function (input, output, session) {
                 
                 output$plot_forecast = renderPlotly({
                   plot_ly(forecast, x = ~timestamp, y = ~forecast, type = "scatter", mode = "lines") %>%
-                    layout(width = 800, height = 500, margin = list(t=65, pad=0),
-                           title = paste0("\nPredicción del ICA para los próximos 7 días  (zona ",input$estacion_prediccion,")"),
+                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                              y = 50, mode = 'lines', name = " ", color = I('green'),
+                              line = list(dash = 'dash'), showlegend = FALSE) %>%
+                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                              y = 100, mode = 'lines', name = " ", color = I('orange'),
+                              line = list(dash = 'dash'), showlegend = FALSE) %>%
+                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                              y = 150, mode = 'lines', name = " ", color = I('red'),
+                              line = list(dash = 'dash'), showlegend = FALSE) %>%
+                    layout(width = 800, height = 500, margin = list(t=65, b=100, pad=0),
+                           title = paste0("\nPredicción del ICA medio para los próximos 7 días  (zona ",input$estacion_prediccion,")"),
                            xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,max(forecast$forecast)*1.5)),
+                           yaxis = list(title = "ICA", range = c(0,160)),
                            hovermode = "FALSE")
                 })
               }

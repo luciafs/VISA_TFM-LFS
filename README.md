@@ -72,7 +72,7 @@ De cada una de las 24 estaciones de control, el Ayto. de Madrid ofrece la siguie
 
 
 
-<img src="Calidad del aire\Estaciones de control/estaciones.PNG" alt="Estaciones de control" width="100%" height="100%">
+<img src="Calidad del aire\Estaciones de control\estaciones.PNG" alt="Estaciones de control" width="100%" height="100%">
 
 En este proyecto vamos a realizar el análisis, tanto descriptivo como predictivo, de una estación de control de cada uno de los tipos existentes. En particular, hemos seleccionado las siguientes estaciones de control:
 
@@ -134,7 +134,9 @@ Para la descarga de datos en tiempo real se ha desarrollado el script *download_
 
 El índice de calidad de aire (ICA) es un indicador que sirve para informar de la calidad del aire a la población de una manera clara y sencilla. Para obtener el ICA es necesario medir en tiempo real una serie de parámetros, tales como los contaminantes SO2, NOx, CO, PM10 y O3, en estaciones distribuidas en distintas zonas.
 
-El conjunto de valores que el ICA puede tomar se agrupa en intervalos a los que se les asocia una trama o color característico de la calidad del aire de una zona determinada. Generalmente la representación del ICA se dividide en cinco categorías, que definen los estados de calidad de aire según sea "muy buena", "buena", "mejorable", "mala" o "muy mala".
+El conjunto de valores que el ICA puede tomar se agrupa en intervalos a los que se les asocia una trama o color característico de la calidad del aire de una zona determinada. Generalmente la representación del ICA se dividide en cinco categorías, que definen los estados de calidad de aire según sea "muy buena", "buena", "mejorable", "mala" o "muy mala". En este caso, basado en las múltiples fuentes de información relativas al cálculo del ICA, los valores límite que conforman la escala de etiquetas lingüísticas anterior son los siguientes:
+
+<img src="Visualización\Imágenes\ica_colores.PNG" alt="Índice de colores" width="50%" height="50%">
 
 A partir de los datos de concentración de contaminantes descargados del portal del Ayto. de Madrid, se ha desarrollado el script *calcular_ICA.R* que calcula el ICA correspondiente a cada estación de control de manera horaria. 
 

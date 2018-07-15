@@ -31,13 +31,21 @@ ica = fread("datos_ica.csv", sep = ",", header = T)
 # estacion = 28079018  # Farolillo (UF)
 estacion = 28079024  # Casa de Campo (S)
 
+if(estacion == 28079008){
+  folder = "Escuelas Aguirre_28079008"
+}else if(estacion == 28079018){
+  folder = "Farolillo_28079018"
+}else{
+  folder = "Casa de campo_28079024"
+}
+
 ica = ica[which(ica$cod_est==estacion),]
 
 # Pasamos las fechas de caracter a fecha
 ica$timestamp = as.POSIXct(ica$timestamp, format = "%Y-%m-%d %H:%M:%S")
 
-# Quitamos info erronea
-ica = ica[which(ica$timestamp < "2018-05-01 00:00:00"),] 
+# Quitamos la info que no nos interese
+# ica = ica[which(ica$timestamp < "2018-05-01 00:00:00"),] 
 
 # Nos quedamos con los años que nos interesan
 ica_horario = ica[which(ica$timestamp >= "2011-01-01 00:00:00"), c("timestamp", "ICA","weekday")]
@@ -100,15 +108,16 @@ m = prophet(train, holidays = holidays, interval.width = 0.8) # If we want to ad
 # m = prophet(train, interval.width = 0.8) 
 
 # Guardamos el modelo que acabamos de entrenar
-# save(m, file=paste0("./Forecast anual/prophet_anual_",estacion,".rda"))
+# save(m, file=paste0("./Forecast anual/",folder,"/prophet_anual_",estacion,".rda"))
 # Importamos modelo
-load(file=paste0("./Forecast anual/prophet_anual_",estacion,".rda"))
+load(file=paste0("./Forecast anual/",folder,"/prophet_anual_",estacion,".rda"))
 
 future <- make_future_dataframe(m, periods = nrow(test), freq = 3600)  # Los dias que tenemos de test, con frecuencia horaria
 
 # Forecast
 forecast <- predict(m, future)
-write.csv(forecast[,c("ds","yhat")],paste0("./Forecast anual/prophet_anual_",estacion,".csv"),row.names=F)
+forecast$real = ica_horario$ICA_ma60
+write.csv(forecast[,c("ds","yhat","real")],paste0("./Forecast anual/",folder,"/prophet_anual_",estacion,".csv"),row.names=F)
 plot(m, forecast)
 
 plot(train, type = "l", lty = 2, ylim = c(min(train$y, forecast$yhat, na.rm = T), max(train$y, forecast$yhat, na.rm = T)), main="Train")
@@ -126,7 +135,7 @@ test2 = test2[1:10919,]  # Nos quedamos con aquellas instancias de las que tenem
 error = as.numeric(test2$ICA_ma60.x) - as.numeric(as.character(test2$ICA_ma60.y))
 mse = sqrt(mean(error ^ 2))
 mae = mean(abs(error))
-write.csv(test2,"./Forecast anual/forecast_anual_test.csv",row.names=F)
+write.csv(test2,"./Forecast anual/",folder,"/Training/forecast_anual_test.csv",row.names=F)
 
 # Plot trend, weekly seasonality and yearly seasonality
 # plot_forecast_component(forecast, "trend") # By separate
@@ -172,15 +181,15 @@ m = prophet(train, holidays = holidays, interval.width = 0.8) # If we want to ad
 # m = prophet(train, interval.width = 0.8)
 
 # Guardamos el modelo que acabamos de entrenar
-# save(m, file=paste0("./Forecast diario/prophet_diario_weekend_",estacion,".rda"))
+# save(m, file=paste0("./Forecast diario/",folder,"/prophet_diario_weekend_",estacion,".rda"))
 # Importamos modelo
-load(file=paste0("./Forecast diario/prophet_diario_weekend_",estacion,".rda"))
+load(file=paste0("./Forecast diario/",folder,"/prophet_diario_weekend_",estacion,".rda"))
 
 future <- make_future_dataframe(m, periods = nrow(test), freq = 3600)  # Los dias que tenemos de test, con frecuencia horaria
 
 # Forecast
 forecast <- predict(m, future)
-write.csv(forecast[,c("ds","yhat")],paste0("./Forecast diario/prophet_diario_",estacion,".csv"),row.names=F)
+write.csv(forecast[,c("ds","yhat")],paste0("./Forecast diario/",folder,"/prophet_diario_",estacion,".csv"),row.names=F)
 plot(m, forecast)
 
 plot(train, type = "l", lty = 2, ylim = c(min(train$y, forecast$yhat, na.rm = T), max(train$y, forecast$yhat, na.rm = T)), main="Train")
@@ -202,7 +211,7 @@ test2 = test2[1:2877,]  # Nos quedamos con aquellas instancias de las que tenemo
 error = as.numeric(test2$clean_ICA.x) - as.numeric(as.character(test2$clean_ICA.y))
 mse = sqrt(mean(error ^ 2,na.rm=T))
 mae = mean(abs(error),na.rm=T)
-write.csv(test2,"./Forecast diario/forecast_diario_test.csv",row.names=F)
+write.csv(test2,"./Forecast diario/",folder,"/Training/forecast_diario_test.csv",row.names=F)
 
 # Plot trend, weekly seasonality and yearly seasonality
 # plot_forecast_component(forecast, "trend") # By separate
