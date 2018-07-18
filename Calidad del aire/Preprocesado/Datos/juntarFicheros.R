@@ -1,5 +1,4 @@
 
-setwd("C:/Users/Dani y Lucía/Desktop/PFM/Input data/Calidad del aire/Preprocesado/Datos")
 
 library(data.table)
 datos = fread("Anio2001.csv")

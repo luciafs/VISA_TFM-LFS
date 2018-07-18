@@ -1,7 +1,4 @@
 
-# Fijamos el directorio de trabajo
-setwd("C:/Users/Dani y Lucía/Desktop/PFM/Input data/Calidad del aire/Preprocesado")
-
 # Deshabilitamos la notacion cientifica
 options(scipen=999)
 

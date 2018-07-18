@@ -3,10 +3,8 @@
 # Este script descarga el tiempo de cualquier dia especificado #
 ################################################################
 
-setwd("C:/Users/Dani y Lucía/Desktop/PFM/Input data/Información meteorológica/_Weather Underground")
-
-fecha_ini = "2004-01-05"
-fecha_fin = "2004-01-31"
+fecha_ini = "2018-06-29"
+fecha_fin = "2018-06-30"
  
 fechas = seq(as.Date(fecha_ini), as.Date(fecha_fin), "day")   # Obtenemos el listado de dias
 fechas = gsub("-","",fechas)   # Formato que necesita la API
