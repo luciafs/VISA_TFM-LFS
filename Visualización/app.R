@@ -185,7 +185,8 @@ ui2 <- function(){
                             checkboxInput("forecast_año", "Año completo", FALSE)
                           ),
                           mainPanel(
-                            plotlyOutput("plot_forecast")
+                            plotlyOutput("plot_forecast"),
+                            plotlyOutput("plot_forecast_anyo")
                           )
                         )
                       )
@@ -598,109 +599,119 @@ server = (function (input, output, session) {
       #-----------------------------------------
       
       observeEvent(input$forecast_año,{
-        observeEvent(input$estacion_prediccion,{
-          if(input$estacion_prediccion == "Escuelas Aguirre (UT)"){
-            est_pred = "Escuelas Aguirre_28079008"
-            est_pred_code = 28079008
-          }else if(input$estacion_prediccion == "Farolillo (UF)"){
-            est_pred = "Farolillo_28079018"
-            est_pred_code = 28079018
-          }else{
-            est_pred = "Casa de campo_28079024"
-            est_pred_code = 28079024
-          }
-        
-          if(input$forecast_año==TRUE){   # Plot prediccion anual
-              if(est_pred_code == 28079024){
-                output$plot_forecast = renderPlotly({
-                  plot_ly(forecast_anyo_28079024, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
-                          name = "Predicción") %>%
-                    add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
-                              line = list(dash = 'dash')) %>%
-                    layout(margin = list(t=65, b=65, pad=0),
-                           title = "\nPredicción del ICA para el resto del año (zona Casa de Campo (S))",
-                           xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079024$yhat)*1.5)),
-                           hovermode = "FALSE",
-                           legend = list(x = 0.75, y = 1))
-                })
-              }
-              if(est_pred_code == 28079008){
-                output$plot_forecast = renderPlotly({
-                  plot_ly(forecast_anyo_28079008, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
-                          name = "Predicción") %>%
-                    add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
-                              line = list(dash = 'dash')) %>%
-                    layout(margin = list(t=65, b=65, pad=0),
-                           title = "\nPredicción del ICA para el resto del año (zona Escuelas Aguirre (UT))",
-                           xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079008$yhat)*1.5)),
-                           hovermode = "FALSE",
-                           legend = list(x = 0.75, y = 1))
-                })
-              }
-              if(est_pred_code == 28079018){
-                output$plot_forecast = renderPlotly({
-                  plot_ly(forecast_anyo_28079018, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
-                          name = "Predicción") %>%
-                    add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
-                              line = list(dash = 'dash')) %>%
-                    layout(margin = list(t=65, b=65, pad=0),
-                           title = "\nPredicción del ICA para el resto del año (zona Farolillo (UF))",
-                           xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079018$yhat)*1.5)),
-                           hovermode = "FALSE")
-                })
-              }
-          }else{   # Prediccion precisa
-            observeEvent(input$forecast_reforzado,{
-              if(input$forecast_reforzado == "forecast_24"){   # Prediccion 24h
-                forecast = fread(paste0("../Calidad del aire/Análisis predictivo/Resultados/",est_pred,"/forecast_24.csv"))
-                forecast$timestamp = as.POSIXct(forecast$timestamp)
-                
-                output$plot_forecast = renderPlotly({
-                  plot_ly(forecast, x = ~timestamp, y = ~forecast, type = "scatter", mode = "lines") %>%
-                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
-                              y = 50, mode = 'lines', name = " ", color = I('green'),
-                              line = list(dash = 'dash'), showlegend = FALSE) %>%
-                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
-                              y = 100, mode = 'lines', name = " ", color = I('orange'),
-                              line = list(dash = 'dash'), showlegend = FALSE) %>%
-                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
-                              y = 150, mode = 'lines', name = " ", color = I('red'),
-                              line = list(dash = 'dash'), showlegend = FALSE) %>%
-                    layout(width = 800, height = 500, margin = list(t=65, b=100, pad=0),
-                           title = paste0("\nPredicción del ICA para las próximas 24 horas (zona ",input$estacion_prediccion,")"),
-                           xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,160)),
-                           hovermode = "FALSE")
-                })
-              }
-              if(input$forecast_reforzado == "forecast_7"){   # Prediccion 7d
-                forecast = fread(paste0("../Calidad del aire/Análisis predictivo/Resultados/",est_pred,"/forecast_7.csv")) 
-                forecast$timestamp = as.POSIXct(forecast$timestamp)  
-                
-                output$plot_forecast = renderPlotly({
-                  plot_ly(forecast, x = ~timestamp, y = ~forecast, type = "scatter", mode = "lines") %>%
-                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
-                              y = 50, mode = 'lines', name = " ", color = I('green'),
-                              line = list(dash = 'dash'), showlegend = FALSE) %>%
-                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
-                              y = 100, mode = 'lines', name = " ", color = I('orange'),
-                              line = list(dash = 'dash'), showlegend = FALSE) %>%
-                    add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
-                              y = 150, mode = 'lines', name = " ", color = I('red'),
-                              line = list(dash = 'dash'), showlegend = FALSE) %>%
-                    layout(width = 800, height = 500, margin = list(t=65, b=100, pad=0),
-                           title = paste0("\nPredicción del ICA medio para los próximos 7 días  (zona ",input$estacion_prediccion,")"),
-                           xaxis = list(title = "", tickangle = 315),
-                           yaxis = list(title = "ICA", range = c(0,160)),
-                           hovermode = "FALSE")
-                })
-              }
-            })
-          }
-        })  # input$estacion_prediccion
+        observeEvent(input$forecast_reforzado,{
+          observeEvent(input$estacion_prediccion,{
+            if(input$estacion_prediccion == "Escuelas Aguirre (UT)"){
+              est_pred = "Escuelas Aguirre_28079008"
+              est_pred_code = 28079008
+            }else if(input$estacion_prediccion == "Farolillo (UF)"){
+              est_pred = "Farolillo_28079018"
+              est_pred_code = 28079018
+            }else{
+              est_pred = "Casa de campo_28079024"
+              est_pred_code = 28079024
+            }
+            
+            forecast = fread(paste0("../Calidad del aire/Análisis predictivo/Resultados/",est_pred,"/forecast.csv"))
+          
+            # Plot prediccion anual
+            if(input$forecast_año==TRUE){   
+                if(est_pred_code == 28079024){
+                  output$plot_forecast_anyo = renderPlotly({
+                    plot_ly(forecast_anyo_28079024, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
+                            name = "Predicción", legend=F) %>%
+                      # add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
+                                # line = list(dash = 'dash')) %>%
+                      layout(margin = list(t=20, b=65, pad=0),
+                             title = "\nPredicción del ICA para el resto del año (zona Casa de Campo (S))",
+                             xaxis = list(title = "", tickangle = 315),
+                             yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079024$yhat)*1.5)),
+                             hovermode = "FALSE")
+                             # legend = list(x = 0.75, y = 1))
+                  })
+                }
+                if(est_pred_code == 28079008){
+                  output$plot_forecast_anyo = renderPlotly({
+                    plot_ly(forecast_anyo_28079008, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
+                            name = "Predicción", legend=F) %>%
+                      # add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
+                                # line = list(dash = 'dash')) %>%
+                      layout(margin = list(t=20, b=65, pad=0),
+                             title = "\nPredicción del ICA para el resto del año (zona Escuelas Aguirre (UT))",
+                             xaxis = list(title = "", tickangle = 315),
+                             yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079008$yhat)*1.5)),
+                             hovermode = "FALSE")
+                             # legend = list(x = 0.75, y = 1))
+                  })
+                }
+                if(est_pred_code == 28079018){
+                  output$plot_forecast_anyo = renderPlotly({
+                    plot_ly(forecast_anyo_28079018, x = ~ds, y = ~yhat, type = "scatter", mode = "lines",
+                            name = "Predicción", legend=F) %>%
+                      # add_trace(y = ~real, mode = 'lines', name = "Realidad", color = I('red'),
+                                # line = list(dash = 'dash')) %>%
+                      layout(margin = list(t=20, b=65, pad=0),
+                             title = "\nPredicción del ICA para el resto del año (zona Farolillo (UF))",
+                             xaxis = list(title = "", tickangle = 315),
+                             yaxis = list(title = "ICA", range = c(0,max(forecast_anyo_28079018$yhat)*1.5)),
+                             hovermode = "FALSE")
+                            # legend = list(x = 0.75, y = 1))
+                  })
+                }
+            }else{
+              output$plot_forecast_anyo = renderPlotly({
+                return(NULL)
+              })
+            }
+            
+            # Prediccion precisa
+            if(input$forecast_reforzado == "forecast_24"){   # Prediccion 24h
+              forecast = forecast[1:24,]
+              forecast$timestamp = as.POSIXct(forecast$timestamp)
+              
+              output$plot_forecast = renderPlotly({
+                plot_ly(forecast, x = ~timestamp, y = ~forecast, type = "scatter", mode = "lines") %>%
+                  add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                            y = 50, mode = 'lines', name = " ", color = I('green'),
+                            line = list(dash = 'dash'), showlegend = FALSE) %>%
+                  add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                            y = 100, mode = 'lines', name = " ", color = I('orange'),
+                            line = list(dash = 'dash'), showlegend = FALSE) %>%
+                  add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                            y = 150, mode = 'lines', name = " ", color = I('red'),
+                            line = list(dash = 'dash'), showlegend = FALSE) %>%
+                  layout(margin = list(t=65, b=100, pad=0),
+                         title = paste0("\nPredicción del ICA para las próximas 24 horas (zona ",input$estacion_prediccion,")"),
+                         xaxis = list(title = "", tickangle = 315),
+                         yaxis = list(title = "ICA", range = c(0,160)),
+                         hovermode = "FALSE")
+              })
+            }
+            if(input$forecast_reforzado == "forecast_7"){   # Prediccion 7d
+              forecast = forecast[1:(7*24),]
+              forecast$timestamp = as.POSIXct(forecast$timestamp)
+              
+              output$plot_forecast = renderPlotly({
+                plot_ly(forecast, x = ~timestamp, y = ~forecast, type = "scatter", mode = "lines") %>%
+                  add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                            y = 50, mode = 'lines', name = " ", color = I('green'),
+                            line = list(dash = 'dash'), showlegend = FALSE) %>%
+                  add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                            y = 100, mode = 'lines', name = " ", color = I('orange'),
+                            line = list(dash = 'dash'), showlegend = FALSE) %>%
+                  add_trace(x = c(forecast$timestamp[1],forecast$timestamp[nrow(forecast)]),
+                            y = 150, mode = 'lines', name = " ", color = I('red'),
+                            line = list(dash = 'dash'), showlegend = FALSE) %>%
+                  layout(margin = list(t=65, b=100, pad=0),
+                         title = paste0("\nPredicción del ICA medio para los próximos 7 días  (zona ",input$estacion_prediccion,")"),
+                         xaxis = list(title = "", tickangle = 315),
+                         yaxis = list(title = "ICA", range = c(0,160)),
+                         hovermode = "FALSE")
+              })
+            }
+            
+          })  # input$estacion_prediccion
+        })  # input$forecast_reforzado
       })  # input$forecast_año
       
 
