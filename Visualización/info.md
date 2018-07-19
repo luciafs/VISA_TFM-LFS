@@ -1,12 +1,12 @@
 ## Descripción
 
-Esta aplicación ha sido desarrollada para el proyecto "TITULO DEL PROYECTO", como parte del proyecto fin de curso del máster "**Análisis y Visualización de Datos Masivos**", en el marco práctico de evaluación de la calidad del aire de la ciudad de Madrid.
+Esta aplicación ha sido desarrollada para el proyecto "Aplicación interactiva para el análisis evolutivo del ICA", como parte del proyecto fin de curso del máster "**Análisis y Visualización de Datos Masivos**", en el marco práctico de evaluación de la calidad del aire de la ciudad de Madrid.
 
 El objetivo principal de esta herramienta es:
 
 - proporcionar una solución global e interactiva que permita visualizar adecuadamente los resultados más relevantes del proyecto.
 - mostrar la evolución histórica del índice de la calidad del aire (ICA), así como de los principales contaminantes y agentes meteorológicos relacionados con ella.
-- mostrar los valores del ICA devueltos por el modelo predictivo desarrollado como parte del proyecto "TITULO DEL PROYECTO".
+- mostrar los valores del ICA devueltos por el modelo predictivo desarrollado como parte del proyecto "Aplicación interactiva para el análisis evolutivo del ICA".
 
 El índice de calidad de aire (ICA) es un indicador que sirve para informar de la calidad del aire a la población de una manera clara y sencilla. Generalmente la representación del ICA se dividide en cinco categorías, que definen los estados de calidad de aire según sea "muy buena", "buena", "mejorable", "mala" o "muy mala". Los valores límite seleccionados que conforman la escala de etiquetas lingüísticas anterior son los siguientes:
 
