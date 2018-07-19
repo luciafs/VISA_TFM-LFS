@@ -89,8 +89,8 @@ resultados_diarios = replace(resultados_diarios, resultados_diarios == "-999", N
 resultados_diarios = replace(resultados_diarios, resultados_diarios == "-999.0", NA)
 
 # Guardamos los resultados
-write.table(resultados_horarios, "tiempo_horario.csv", append = TRUE, row.names = F, col.names=F)
-write.table(resultados_diarios, "tiempo_diario.csv", append = TRUE, row.names = F, col.names=F)
+write.table(resultados_horarios, "tiempo_horario.csv", append = TRUE, sep=",",row.names = F, col.names=F)
+write.table(resultados_diarios, "tiempo_diario.csv", append = TRUE, sep=",",row.names = F, col.names=F)
 
 # Movemos los ficheros a la carpeta "Parsed"
 for(i in names){

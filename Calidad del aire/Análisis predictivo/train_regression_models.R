@@ -37,9 +37,9 @@ mape = function(x,y){
 #----------------------------------------------------------------------
 
 # Importamos la prediccion de la serie temporal
-# estacion = 28079008   # Escuelas Aguirre
+estacion = 28079008   # Escuelas Aguirre
 # estacion = 28079018   # Farolillo
-estacion = 28079024   # Casa de Campo
+# estacion = 28079024   # Casa de Campo
 
 ts_ica_forecast = fread(paste0("prophet_diario_",estacion,".csv"))  
 colnames(ts_ica_forecast) = c("timestamp","prophet")
@@ -54,7 +54,9 @@ weather = weather[which(weather$timestamp>="2015-01-01 00:00:00" & weather$times
 weather = weather[,-c("anyo","wdir","wdire","snow")]
 
 # Hay horas con varias mediciones meteorologicas. Nos quedamos con la primera
-weather = weather[-which(duplicated(weather$timestamp)),]
+if(any(duplicated(weather$timestamp))){
+  weather = weather[-which(duplicated(weather$timestamp)),]
+}
 
 # Juntamos toda la informacion
 input_data = merge(ts_ica_forecast, weather, "timestamp", all.x = TRUE)
@@ -85,8 +87,8 @@ input_data$hora = as.numeric(input_data$hora)
 input_data$temp = as.numeric(input_data$temp)
 input_data$hum = as.numeric(input_data$hum)
 input_data$wspd = as.numeric(input_data$wspd)
-input_data$presion = as.numeric(input_data$presion)
-input_data$fog = as.numeric(input_data$fog)
+input_data$presion = NULL
+input_data$fog = NULL
 input_data$rain = as.numeric(input_data$rain)
 
 # Dividimos los conjuntos de train y test
@@ -99,7 +101,7 @@ test = input_data[which(input_data$timestamp>="2018-01-01 07:00:00"),]
 # Random Forest #
 #################
 # # Entrenamiento
-# model.randomForest = randomForest(clean_ICA ~ prophet+mes+dia+hora+temp+hum+wspd+presion+fog+rain+days_from_last_rain,
+# model.randomForest = randomForest(clean_ICA ~ prophet+mes+dia+hora+temp+hum+wspd+rain+days_from_last_rain,
 #                                   data = train, ntree = 100)
 # 
 # valoracion.randomForest = as.matrix(predict(model.randomForest, train))
@@ -136,7 +138,7 @@ p
 # M5P #
 #######
 # # Entrenamiento
-# model.M5P = M5P(clean_ICA ~ prophet+mes+dia+hora+temp+hum+wspd+presion+fog+rain+days_from_last_rain, data = train)
+# model.M5P = M5P(clean_ICA ~ prophet+mes+dia+hora+temp+hum+wspd+rain+days_from_last_rain, data = train)
 # 
 # valoracion.M5P = as.matrix(predict(model.M5P, train))
 # 
@@ -170,7 +172,7 @@ p
 # NN #
 ######
 # # Entrenamiento
-# model.NN = nnet(clean_ICA ~ prophet+mes+dia+hora+temp+hum+wspd+presion+fog+rain+days_from_last_rain, data = train,
+# model.NN = nnet(clean_ICA ~ prophet+mes+dia+hora+temp+hum+wspd+rain+days_from_last_rain, data = train,
 #                 size = 15, linout = TRUE, decay = 0.5, maxit = 5000)
 # 
 # valoracion.NN = as.matrix(predict(model.NN, train))
