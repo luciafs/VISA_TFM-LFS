@@ -354,7 +354,7 @@ server = (function (input, output, session) {
                                       color = I('blue')) %>%
                             add_trace(y = ~ICA_ma60, mode = 'lines', name = "Media móvil mensual",
                                       color = I('red')) %>%
-                            layout(margin = list(t=65, pad=0),
+                            layout(margin = list(t=65, b=65, pad=0),
                                    title = paste0("\nEvolución histórica del ICA en el año ",input$años," (zona ",input$estacion_historico,")"),
                                    xaxis = list(title = "", tickangle = 315),
                                    yaxis = list(title = "ICA", range = c(0,max(hist_ica_plot$clean_ICA)*1.2)),

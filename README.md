@@ -365,7 +365,19 @@ A continuación nos planteamos analizar la evolución del ICA con respecto a cad
 
 **<u>To do</u>**: Preparar los plots de tal manera que se dibujen dos gráficas, una encima de la otra, compartiendo eje temporal (eje x). De esta manera se podrá visualizar fácilmente si existe alguna correlación entre el ICA y cada contaminante. Hacer a nivel de valores medios
 
+<img src="Calidad del aire\Análisis descriptivo\evolucion_temp.PNG" alt="Raw data" width="100%" height="100%">
 
+
+
+<img src="Calidad del aire\Análisis descriptivo\evolucion_hum.PNG" alt="Raw data" width="100%" height="100%">
+
+
+
+<img src="Calidad del aire\Análisis descriptivo\evolucion_pres.PNG" alt="Raw data" width="100%" height="100%">
+
+
+
+<img src="Calidad del aire\Análisis descriptivo\evolucion_rain.PNG" alt="Raw data" width="100%" height="100%">
 
 
 
@@ -667,8 +679,8 @@ La aplicación desarrollada se encuentra desplegada en la máquina virtual del p
 
 Con el objetivo de controlar el acceso a la aplicación se ha desarrollado un módulo de "login", en el cuál se deben introducir las credenciales adecuadas para poder acceder al contenido. En nuestro caso, las credenciales establecidas son las siguientes:
 
-- **Username**: ICA_LUCIA
-- **Password**: VISA_tfm2018
+- **Username**: VISA_ICA
+- **Password**: tfm2018
 
 <img src="Visualización\Imágenes\login.PNG" alt="Raw data" width="100%" height="100%">
 
