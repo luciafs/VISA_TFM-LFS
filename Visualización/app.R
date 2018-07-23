@@ -453,7 +453,7 @@ server = (function (input, output, session) {
                                         name = "Raw data", color = I('black')) %>%
                                   add_trace(y = ~contaminante_ma, mode = 'lines', name = "Media móvil mensual",
                                             color = I('red')) %>%
-                                  layout(margin = list(t=65, pad=0),
+                                  layout(margin = list(t=65, b=65, pad=0),
                                          title = paste0("\nEvolución histórica del ",input$sel_contaminante," en el año ",input$años," (zona ",input$estacion_historico,")"),
                                          xaxis = list(title = "", tickangle = 315),
                                          yaxis = list(title = paste(input$sel_contaminante,cont_units)),
@@ -521,7 +521,7 @@ server = (function (input, output, session) {
                                     name = "Raw data", color = I('black')) %>%
                               add_trace(y = ~meteorologia_ma, mode = 'lines', name = "Media móvil mensual",
                                         color = I('red')) %>%
-                              layout(margin = list(t=65, pad=0),
+                              layout(margin = list(t=65, b=65, pad=0),
                                      title = paste0("\n ",meteo_label," desde el año 2011"),
                                      xaxis = list(title = "", tickangle = 315),
                                      yaxis = list(title = paste(meteo_label,meteo_units)),
@@ -559,10 +559,11 @@ server = (function (input, output, session) {
                             
                             if(input$hist_representacion == "hist_med"){   # Curva media
                               output$plot_variable = renderPlotly({
-                                plot_ly(hist_tiempo_plot, x = ~timestamp, y = ~meteorologia, type = "scatter", mode = "lines") %>%
+                                plot_ly(hist_tiempo_plot, x = ~timestamp, y = ~meteorologia, type = "scatter", mode = "lines",
+                                        name = "Raw data", color = I('black')) %>%
                                   add_trace(y = ~meteorologia_ma, mode = 'lines', name = "Media móvil mensual",
                                             color = I('red')) %>%
-                                  layout(margin = list(t=65, pad=0),
+                                  layout(margin = list(t=65, b=65, pad=0),
                                          title = paste0("\n ",meteo_label," en el año ",input$años),
                                          xaxis = list(title = "", tickangle = 315),
                                          yaxis = list(title = paste(meteo_label,meteo_units)),

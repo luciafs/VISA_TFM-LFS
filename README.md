@@ -375,6 +375,10 @@ La siguiente figura muestra la evolución de la temperatura durante los años se
 
 <img src="Calidad del aire\Análisis descriptivo\evolucion_temp.PNG" alt="Evolución de la temperatura" width="100%" height="100%">
 
+Como se puede observar en la siguiente imagen, existe una alta correlación entre la evolución de la temperatura y la evolución de la calidad del aire. Los resultados muestran a modo de ejemplo la evolución de ambas variables en el año 2016:
+
+<img src="Calidad del aire\Análisis descriptivo\ica_vs_temp.PNG" alt="Evolución de la temperatura en comparación con el ICA" width="100%" height="100%">
+
 
 
 La siguiente imagen muestra la evolución de la humedad, medida porcentualmente. En este caso su comportamiento también es periódico y bastante constante, observándose las tasas máximas de humedad en los primeros meses del año, descendiendo progresivamente hasta el mes de agosto, para volver a ascender progresivamente durante los últimos meses del año.
