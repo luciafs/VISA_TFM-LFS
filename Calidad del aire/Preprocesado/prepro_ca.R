@@ -18,7 +18,7 @@ getSeason <- function(dates) {
   # Convert dates from any year to 2012 dates
   d <- as.Date(strftime(dates, format="2000-%m-%d"))
   
-  ifelse (d >= WS & d < SE, "Invierno",
+  ifelse (d >= WS | d < SE, "Invierno",
           ifelse (d >= SE & d < SS, "Primavera",
                   ifelse (d >= SS & d < FE, "Verano", "Otoño")))
 }
@@ -178,12 +178,12 @@ resultados3$weekday = weekdays(as.POSIXct(resultados3$timestamp))
 resultados3$season = getSeason(as.POSIXct(resultados3$timestamp))
 
 # Apendamos los resultados en el fichero del año
-write.table(resultados3, paste0("./Datos/",folder,".csv"), append = TRUE, row.names = F, col.names = F)
+write.table(resultados3, paste0("./Datos/",folder,".csv"), sep=",", append = TRUE, row.names = F, col.names = F)
 
 #----------------------------------------------------
 resultados3 = resultados3[which(resultados3$cod_est=="28079008" |
                                 resultados3$cod_est=="28079018" |
                                 resultados3$cod_est=="28079024"),]
 
-write.table(resultados3, "./Datos/datos_ica.csv", append = TRUE, row.names = F, col.names = F)
+write.table(resultados3, "./Datos/datos_ica.csv", sep=",", append = TRUE, row.names = F, col.names = F)
 

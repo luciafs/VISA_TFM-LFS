@@ -73,16 +73,16 @@ for(anio in seq(2001,2018,1)){
   # Reordenamos los resultados
   resultados2 = data.frame(matrix(NA,
                                   length(unique(resultados$cod_est))*length(seq(as.POSIXct(paste0(anio,"-01-01 00:00:00")),
-                                                                                as.POSIXct(paste0(anio,"-12-31 23:00:00")), by="hour")),
+                                                                                as.POSIXct(paste0(anio,"-06-30 23:00:00")), by="hour")),
                                   8))
   
   colnames(resultados2) = c("timestamp","cod_est","SO2","CO","NO2","PM2.5","PM10","O3")
   resultados2$timestamp = rep(seq(as.POSIXct(paste0(anio,"-01-01 00:00:00")),
-                                  as.POSIXct(paste0(anio,"-12-31 23:00:00")), by="hour"),
+                                  as.POSIXct(paste0(anio,"-06-30 23:00:00")), by="hour"),
                               times = length(unique(resultados$cod_est)))
   resultados2$cod_est = rep(unique(resultados$cod_est),
                             each=length(seq(as.POSIXct(paste0(anio,"-01-01 00:00:00")),
-                                            as.POSIXct(paste0(anio,"-12-31 23:00:00")), by="hour")))
+                                            as.POSIXct(paste0(anio,"-06-30 23:00:00")), by="hour")))
   
   # Bucle que vaya completando la tabla anterior
   for(i in 1:nrow(resultados2)){
@@ -107,6 +107,6 @@ for(anio in seq(2001,2018,1)){
   resultados2$PM2.5 = NULL
   
   # Guardamos los resultados
-  write.csv(resultados2, paste0("Datos/",folder,".csv"), row.names = F)
+  write.csv(resultados2, paste0("Datos/",folder,".csv"), row.names = F,sep=",")
 }
 

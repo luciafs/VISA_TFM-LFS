@@ -15,7 +15,7 @@ getSeason <- function(dates) {
   # Convert dates from any year to 2012 dates
   d <- as.Date(strftime(dates, format="2000-%m-%d"))
   
-  ifelse (d >= WS & d < SE, "Invierno",
+  ifelse (d >= WS | d < SE, "Invierno",
           ifelse (d >= SE & d < SS, "Primavera",
                   ifelse (d >= SS & d < FE, "Verano", "Otoño")))
 }
