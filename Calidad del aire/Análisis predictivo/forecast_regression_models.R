@@ -38,7 +38,7 @@ ts_ica_forecast = fread(paste0("prophet_diario_",estacion,".csv"))
 colnames(ts_ica_forecast) = c("timestamp","prophet")
 
 # Importamos los datos meteorologicos
-weather = fread("../../Informaci贸n meteorol贸gica/Weather Underground/Forecast/forecast.csv")
+weather = fread("../../Informaci髇 meteorol骻ica/Weather Underground/Forecast/forecast.csv")
 # Calculamos el timestamp a partir de las otras columnas
 weather$timestamp = paste0(weather$anyo,"-",weather$mes,"-",weather$dia," ",weather$hora,":00:00")
   
@@ -62,7 +62,7 @@ if(any(input_data$temp == "")){
 }
 
 # Creamos la variable artificial que marca los dias que han pasado desde la ultima vez que llovio
-hist_weather = fread("../../Informaci贸n meteorol贸gica/Weather Underground/Preprocesado/tiempo_diario.csv")
+hist_weather = fread("../../Informaci髇 meteorol骻ica/Weather Underground/Preprocesado/tiempo_diario.csv")
 idx_rain = which(hist_weather$rain==1)
 days_from_last_rain = nrow(hist_weather)-idx_rain[length(idx_rain)]
 fechas = unique(strptime(input_data$timestamp, "%Y-%m-%d"))

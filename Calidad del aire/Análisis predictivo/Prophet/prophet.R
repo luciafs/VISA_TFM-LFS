@@ -53,7 +53,7 @@ ica$timestamp = as.POSIXct(ica$timestamp, format = "%Y-%m-%d %H:%M:%S")
 # Quitamos la info que no nos interese
 # ica = ica[which(ica$timestamp < "2018-05-01 00:00:00"),] 
 
-# Nos quedamos con los aÃ±os que nos interesan
+# Nos quedamos con los años que nos interesan
 ica_horario = ica[which(ica$timestamp >= "2011-01-01 00:00:00"), c("timestamp", "ICA","weekday")]
 
 # Eliminamos los outliers y los missing values. replace.missing = TRUE linearly interpolates missing values
@@ -66,7 +66,7 @@ ggplot(ica_horario, aes(timestamp, clean_ICA)) +
   scale_x_datetime("Date") +
   ylab("ICA") + xlab("Date")
 
-# Suavizamos la seÃ±al
+# Suavizamos la señal
 ica_horario$ICA_ma = ma(ica_horario$clean_ICA, order = 7*24) 
 ica_horario$ICA_ma60 = ma(ica_horario$clean_ICA, order = 60 * 24)
 
@@ -81,7 +81,7 @@ ggplot() +
 ###################################################################################
 # Forecast anual
 
-# Nos quedamos con los aÃ±os 2011-2016 para entrenar y 2017-2018 para validar
+# Nos quedamos con los años 2011-2016 para entrenar y 2017-2018 para validar
 ica_horario_train = ica_horario[which(ica_horario$timestamp < "2017-01-01 00:00:00"),]
 train = ica_horario_train[, c("timestamp", "ICA_ma60")]
 colnames(train) = c("ds", "y")
@@ -92,7 +92,7 @@ test = ica_horario_test[, c("timestamp", "ICA_ma60")]
 # Modeling holidays
 saturday <- data_frame(
   holiday = 'saturday',
-  ds = ica_horario_train$timestamp[which(ica_horario_train$weekday=="sÃ¡bado")],
+  ds = ica_horario_train$timestamp[which(ica_horario_train$weekday=="sábado")],
   lower_window = 0,
   upper_window = 1)
 
@@ -151,7 +151,7 @@ prophet_plot_components(m, forecast)  # All together
 ###################################################################################
 # Forecast diario
 
-# Nos quedamos con los aÃ±os 2015-2017 para entrenar y 2018 para validar
+# Nos quedamos con los años 2015-2017 para entrenar y 2018 para validar
 ica_horario_train = ica_horario[which(ica_horario$timestamp >= "2015-01-01 00:00:00" & ica_horario$timestamp < "2018-01-01 00:00:00"),]
 train = ica_horario_train[, c("timestamp", "clean_ICA")]
 
@@ -166,7 +166,7 @@ colnames(train) = c("ds", "y")
 # Modeling holidays
 saturday <- data_frame(
   holiday = 'saturday',
-  ds = ica_horario_train$timestamp[which(ica_horario_train$weekday=="sÃ¡bado")],
+  ds = ica_horario_train$timestamp[which(ica_horario_train$weekday=="sábado")],
   lower_window = 0,
   upper_window = 1)
 

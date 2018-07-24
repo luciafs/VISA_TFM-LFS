@@ -21,7 +21,7 @@ getSeason <- function(dates) {
   
   ifelse (d >= WS | d < SE, "Invierno",
           ifelse (d >= SE & d < SS, "Primavera",
-                  ifelse (d >= SS & d < FE, "Verano", "OtoÃ±o")))
+                  ifelse (d >= SS & d < FE, "Verano", "Otoño")))
 }
 
 # ---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ for(anio in seq(2001,2018,1)){
   datos2$Cont = gsub(4,"PM10",datos2$Cont)
   datos2$Cont = gsub(5,"O3",datos2$Cont)
   
-  # Asignamos etiquetas lingÃ¼Ã­sticas
+  # Asignamos etiquetas lingüísticas
   # datos2$Etiqueta[which(datos2$ICA<75)] = "Buena"
   # datos2$Etiqueta[which(datos2$ICA>=75 & datos2$ICA<100)] = "Aceptable"
   # datos2$Etiqueta[which(datos2$ICA>=100 & datos2$ICA<150)] = "Mala"

@@ -24,7 +24,7 @@ getSeason <- function(dates) {
   
   ifelse (d >= WS | d < SE, "Invierno",
           ifelse (d >= SE & d < SS, "Primavera",
-                  ifelse (d >= SS & d < FE, "Verano", "OtoÃ±o")))
+                  ifelse (d >= SS & d < FE, "Verano", "Otoño")))
 }
 
 # ---------------------------------------------------------------------------
@@ -42,7 +42,7 @@ resultados = matrix(0,1,32)
 colnames(resultados) = c("cod_est","cod_params","cod_names","cod_ta","cod_pa","anio","mes","dia","H1","H2",
                          "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12","H13","H14","H15","H16","H17","H18","H19","H20","H21","H22","H23","H24")
 
-# Los vamos parseando uno a uno y el resultado lo almacenamos en un archivo referente al aÃ±o
+# Los vamos parseando uno a uno y el resultado lo almacenamos en un archivo referente al año
 for(i in names){
   # Leemos el fichero
   file = data.frame(read.table(paste0("../Datos en tiempo real/Datos/",i)))
@@ -51,13 +51,13 @@ for(i in names){
   
   # Parseamos el contenido
   if(substr(file[1,1],15,16)!=20){
-    # Parseo 1 (hasta septiembre de 2017, inclusive, expresan el aÃ±o con 2 digitos):
+    # Parseo 1 (hasta septiembre de 2017, inclusive, expresan el año con 2 digitos):
     file = file %>% separate(V1, c("cod_est","cod_params","cod_ta","cod_pa","anio","mes","dia","H1","H2",
                                    "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12","H13","H14","H15","H16","H17","H18","H19","H20","H21","H22","H23","H24"),
                              sep = c(8,10,12,14,16,18,20,26,32,38,44,50,56,62,68,74,80,86,92,98,104,110,
                                      116,122,128,134,140,146,152,158), remove = T)
   }else{
-    # Parseo 2 (a partir de octubre de 2017 expresan el aÃ±o con 4 digitos):
+    # Parseo 2 (a partir de octubre de 2017 expresan el año con 4 digitos):
     file = file %>% separate(V1, c("cod_est","cod_params","cod_ta","cod_pa","anio_rm","anio","mes","dia","H1","H2",
                                    "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12","H13","H14","H15","H16","H17","H18","H19","H20","H21","H22","H23","H24"),
                              sep = c(8,10,12,14,16,18,20,22,28,34,40,46,52,58,64,70,76,82,88,94,100,106,112,
@@ -161,7 +161,7 @@ resultados3$Cont = gsub(3,"NO2",resultados3$Cont)
 resultados3$Cont = gsub(4,"PM10",resultados3$Cont)
 resultados3$Cont = gsub(5,"O3",resultados3$Cont)
 
-# Asignamos etiquetas lingÃ¼Ã­sticas
+# Asignamos etiquetas lingüísticas
 # resultados3$Etiqueta[which(resultados3$ICA<75)] = "Buena"
 # resultados3$Etiqueta[which(resultados3$ICA>=75 & resultados3$ICA<100)] = "Aceptable"
 # resultados3$Etiqueta[which(resultados3$ICA>=100 & resultados3$ICA<150)] = "Mala"
@@ -181,7 +181,7 @@ resultados3$weekday = weekdays(as.POSIXct(resultados3$timestamp))
 # resultados3$num_weekday = as.POSIXlt(resultados3$timestamp)$wday  # Formato numero
 resultados3$season = getSeason(as.POSIXct(resultados3$timestamp))
 
-# Apendamos los resultados en el fichero del aÃ±o
+# Apendamos los resultados en el fichero del año
 write.table(resultados3, paste0("./Datos/",folder,".csv"), sep=",", append = TRUE, row.names = F, col.names = F)
 
 #----------------------------------------------------

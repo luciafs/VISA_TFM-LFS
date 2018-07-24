@@ -17,31 +17,31 @@ for(anio in seq(2001,2018,1)){
   
   # Obtenemos los nombres de los ficheros que vamos a parsear
   folder = paste0("Anio",anio)
-  names = list.files(paste0("../Datos histÃ³ricos/",folder),pattern="*.txt")
+  names = list.files(paste0("../Datos históricos/",folder),pattern="*.txt")
   codigos_interes = data.frame("cod_params"=c("01","06","08","09","10","14"),
                                "cod_names"=c("SO2","CO","NO2","PM2.5","PM10","O3"))
   
-  # Inicializamos una variable donde se almacenaran los resultados del aÃ±o
+  # Inicializamos una variable donde se almacenaran los resultados del año
   resultados = matrix(0,1,32)
   colnames(resultados) = c("cod_est","cod_params","cod_names","cod_ta","cod_pa","anio","mes","dia","H1","H2",
                            "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12","H13","H14","H15","H16","H17","H18","H19","H20","H21","H22","H23","H24")
   
-  # Los vamos parseando uno a uno y el resultado lo almacenamos en un archivo referente al aÃ±o
+  # Los vamos parseando uno a uno y el resultado lo almacenamos en un archivo referente al año
   for(i in names){
     # Leemos el fichero
-    file = data.frame(read.table(paste0("../Datos histÃ³ricos/",folder,"/",i)))
+    file = data.frame(read.table(paste0("../Datos históricos/",folder,"/",i)))
     # Eliminamos las comas (en caso de que las haya)
     file$V1 = gsub(",","",file$V1)
     
     # Parseamos el contenido
     if(substr(file[1,1],15,16)!=20){
-      # Parseo 1 (hasta septiembre de 2017, inclusive, expresan el aÃ±o con 2 digitos):
+      # Parseo 1 (hasta septiembre de 2017, inclusive, expresan el año con 2 digitos):
       file = file %>% separate(V1, c("cod_est","cod_params","cod_ta","cod_pa","anio","mes","dia","H1","H2",
                                      "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12","H13","H14","H15","H16","H17","H18","H19","H20","H21","H22","H23","H24"),
                                sep = c(8,10,12,14,16,18,20,26,32,38,44,50,56,62,68,74,80,86,92,98,104,110,
                                        116,122,128,134,140,146,152,158), remove = T)
     }else{
-      # Parseo 2 (a partir de octubre de 2017 expresan el aÃ±o con 4 digitos):
+      # Parseo 2 (a partir de octubre de 2017 expresan el año con 4 digitos):
       file = file %>% separate(V1, c("cod_est","cod_params","cod_ta","cod_pa","anio_rm","anio","mes","dia","H1","H2",
                                      "H3","H4","H5","H6","H7","H8","H9","H10","H11","H12","H13","H14","H15","H16","H17","H18","H19","H20","H21","H22","H23","H24"),
                                sep = c(8,10,12,14,16,18,20,22,28,34,40,46,52,58,64,70,76,82,88,94,100,106,112,
