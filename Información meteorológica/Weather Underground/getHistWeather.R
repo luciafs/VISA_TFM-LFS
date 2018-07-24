@@ -3,8 +3,8 @@
 # Este script descarga el tiempo de cualquier dia especificado #
 ################################################################
 
-fecha_ini = "2018-06-29"
-fecha_fin = "2018-06-30"
+fecha_ini = "2018-07-18"
+fecha_fin = "2018-07-23"
  
 fechas = seq(as.Date(fecha_ini), as.Date(fecha_fin), "day")   # Obtenemos el listado de dias
 fechas = gsub("-","",fechas)   # Formato que necesita la API

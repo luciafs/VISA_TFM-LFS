@@ -161,5 +161,5 @@ resultados_horarios = replace(resultados_horarios, resultados_horarios == "-999"
 resultados_horarios = replace(resultados_horarios, resultados_horarios == "-999.0", NA)
 
 # Guardamos los resultados
-write.table(resultados_horarios, "./Forecast/forecast.csv", row.names = F)
+write.table(resultados_horarios, "./Forecast/forecast.csv",sep=",", row.names = F)
 file.remove("./Forecast/forecast.json")
