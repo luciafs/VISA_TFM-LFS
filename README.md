@@ -1,6 +1,8 @@
 # TFM-LUCIA
 TFM Máster "Visual Analytics and Big Data"
 
+Universidad Internacional de La Rioja (UNIR)
+
 
 
 # Contenido
