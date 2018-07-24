@@ -28,8 +28,8 @@ library(knitr)
 
 # Credentials for access
 Logged = FALSE
-my_username <- "a"
-my_password <- "a"
+my_username <- "VISA_ICA"
+my_password <- "tfm2018"
 
 
 ######################### PREPROCESSING #########################
