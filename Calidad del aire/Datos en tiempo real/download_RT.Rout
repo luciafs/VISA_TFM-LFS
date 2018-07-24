@@ -1,0 +1,33 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R es un software libre y viene sin GARANTIA ALGUNA.
+Usted puede redistribuirlo bajo ciertas circunstancias.
+Escriba 'license()' o 'licence()' para detalles de distribucion.
+
+R es un proyecto colaborativo con muchos contribuyentes.
+Escriba 'contributors()' para obtener más información y
+'citation()' para saber cómo citar R o paquetes de R en publicaciones.
+
+Escriba 'demo()' para demostraciones, 'help()' para el sistema on-line de ayuda,
+o 'help.start()' para abrir el sistema de ayuda HTML con su navegador.
+Escriba 'q()' para salir de R.
+
+> 
+> #	Autor: Lucia Fernandez Sanchez                 
+> #	TFM Master Visual Analytics and Big Data     									
+> #	Universidad Internacional de La Rioja (UNIR)   									
+> 
+> url_txt <- "http://www.mambiente.munimadrid.es/opendata/horario.txt"
+> download.file(url_txt, paste0("Datos/",Sys.Date(),".txt"))
+probando la URL 'http://www.mambiente.munimadrid.es/opendata/horario.txt'
+Content type 'text/plain' length 33896 bytes (33 KB)
+==================================================
+downloaded 33 KB
+
+> 
+> url_csv <- "https://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv"
+> download.file(url_csv, paste0("Datos/",Sys.Date(),".csv"), method="libcurl")
+probando la URL 'https://datos.madrid.es/egob/catalogo/212531-10515086-calidad-aire-tiempo-real.csv'

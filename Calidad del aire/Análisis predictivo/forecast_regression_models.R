@@ -3,7 +3,6 @@
 #	TFM Master Visual Analytics and Big Data     									
 #	Universidad Internacional de La Rioja (UNIR)   									
 
-
 rm(list = ls())
 graphics.off()
 
