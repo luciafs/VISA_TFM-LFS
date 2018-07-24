@@ -672,7 +672,8 @@ server = (function (input, output, session) {
             # Prediccion precisa
             if(input$forecast_reforzado == "forecast_24"){   # Prediccion 24h
               if(any(which(forecast$timestamp < Sys.time()))){
-                forecast = forecast[-which(forecast$timestamp < Sys.time()),]
+                id_out = which(forecast$timestamp < Sys.time())
+                forecast = forecast[-id_out,]
               }
               forecast = forecast[1:24,]
               forecast$timestamp = as.POSIXct(forecast$timestamp)
