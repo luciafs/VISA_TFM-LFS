@@ -1,4 +1,8 @@
 
+#	Autor: Lucia Fernandez Sanchez                 
+#	TFM Master Visual Analytics and Big Data     									
+#	Universidad Internacional de La Rioja (UNIR) 
+
 rm(list = ls())
 options(warn=-1)  # Evitamos que se muestren "warning messages"
 
