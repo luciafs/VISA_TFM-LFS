@@ -1,2 +1,0 @@
-username: visa-lfs
-password: Azuretfm2018
